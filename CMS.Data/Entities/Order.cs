@@ -1,8 +1,4 @@
-﻿//Ten: Ho Si Quy
-//Lop: CCQ2311D
-//MSSV: 2123110107
-//Noi dung: Thực thể don hang
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
