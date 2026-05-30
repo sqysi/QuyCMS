@@ -1,8 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CMS.Data; // Th? m?c ch?a DbContext 
 using System.Linq;
+using Microsoft.AspNetCore.Authorization; // Cần thêm namespace này
 
+[Authorize] // Bắt buộc phải đăng nhập mới được vào các hàm bên dưới
 public class HomeController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -14,11 +16,11 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        // LINQ: L?y 3 b�i vi?t m?i nh?t
+        // LINQ: L?y 3 bài vi?t m?i nh?t
         var latestPosts = _context.Posts
-                          .Include(p => p.Category) // L?y k�m t�n danh m?c ?? hi?n th? 
-                          .OrderByDescending(p => p.CreatedDate) // S?p x?p ng�y m?i nh?t l�n ??u 
-                          .Take(3) // Ch? l?y ?�ng 3 b?n tin ??u ti�n
+                          .Include(p => p.Category) // L?y kèm tên danh m?c ?? hi?n th? 
+                          .OrderByDescending(p => p.CreatedDate) // S?p x?p ngày m?i nh?t lên ??u 
+                          .Take(3) // Ch? l?y ?úng 3 b?n tin ??u tiên
                           .ToList();
 
         return View(latestPosts);

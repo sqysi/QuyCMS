@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq; // Thêm thư viện này để dùng .FirstOrDefault()
+using Microsoft.AspNetCore.Authorization; // Cần thêm namespace này
 
 namespace CMS.Backend.Controllers
 {
+    [Authorize] // Bắt buộc phải đăng nhập mới được vào các hàm bên dưới
+
     public class PostController : Controller
     {
         private readonly ApplicationDbContext _context;

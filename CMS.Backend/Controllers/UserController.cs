@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Authorization; // Cần thêm namespace này
 
 namespace CMS.Backend.Controllers
 {
+    [Authorize(Roles = "Administrator")] // Chỉ tài khoản có Role là Admin mới được phép vào
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
