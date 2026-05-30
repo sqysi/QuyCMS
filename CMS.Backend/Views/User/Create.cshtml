@@ -1,0 +1,36 @@
+﻿@model CMS.Data.Entities.User
+@{
+    Layout = "_LayoutAdmin";
+}
+<div class="container mt-4">
+    <h2 class="text-primary">THÊM THÀNH VIÊN MỚI</h2>
+    <hr />
+
+    <form asp-action="Create" method="post">
+        <div class="mb-3">
+            <label class="form-label fw-bold">Tên đăng nhập:</label>
+            <input asp-for="Username" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Mật khẩu:</label>
+            <input asp-for="PasswordHash" type="password" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Họ và tên:</label>
+            <input asp-for="FullName" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Quyền hạn:</label>
+            <select asp-for="Role" class="form-select">
+                <option value="Editor">Editor (Biên tập viên)</option>
+                <option value="Administrator">Administrator (Quản trị viên)</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Lưu thành viên</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy bỏ</a>
+    </form>
+</div>
