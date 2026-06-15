@@ -1,0 +1,82 @@
+﻿@model CMS.Data.Entities.Product
+@{
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container mt-4">
+    <h2 class="text-warning">CHỈNH SỬA SẢN PHẨM</h2>
+    <hr />
+
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="CategoryProductId" />
+
+        <div class="row">
+
+            <div class="col-md-8">
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Tên sản phẩm:</label>
+                    <input asp-for="Name" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Mô tả chi tiết:</label>
+                    <textarea asp-for="Description"
+                              class="form-control"
+                              rows="5"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Giá bán:</label>
+                    <input asp-for="Price"
+                           type="number"
+                           class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Số lượng tồn kho:</label>
+                    <input asp-for="StockQuantity"
+                           type="number"
+                           class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Hình ảnh hiện tại:</label>
+
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <div class="mb-2">
+                            <img src="@Model.ImageUrl"
+                                 style="height:100px;border-radius:8px;" />
+                        </div>
+                    }
+
+                    <input type="file"
+                           name="imageFile"
+                           class="form-control"
+                           accept="image/*" />
+
+                    <small class="text-muted">
+                        Chọn ảnh mới để thay thế hoặc để trống.
+                    </small>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-warning">
+                Cập nhật thay đổi
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Hủy bỏ
+            </a>
+        </div>
+
+    </form>
+</div>

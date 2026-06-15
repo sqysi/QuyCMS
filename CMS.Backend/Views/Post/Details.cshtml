@@ -2,33 +2,37 @@
 @{
     Layout = "_LayoutAdmin";
 }
-<div class="container mt-5">
+<div class="container-fluid mt-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/Post">Danh sách bài viết</a></li>
-            <li class="breadcrumb-item active">Chi tiết bài viết</li>
+            <li class="breadcrumb-item"><a href="/Post" class="text-decoration-none">Quản lý bài viết</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Chi tiết bài viết</li>
         </ol>
     </nav>
 
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <h1 class="display-4 fw-bold text-primary">@Model.Title</h1>
-            <p class="text-muted">Đăng ngày: @Model.CreatedDate.ToString("dd/MM/yyyy HH:mm")</p>
-            <hr />
+    <div class="card shadow-sm border-0 mt-3">
+        <div class="card-body p-5">
+            <h1 class="display-6 fw-bold text-primary mb-3">@Model.Title</h1>
+            <p class="text-muted mb-4"><i class="bi bi-clock"></i> Đăng lúc: @Model.CreatedDate.ToString("dd/MM/yyyy HH:mm")</p>
 
-            <div class="text-center mb-4">
-                <img src="@Model.ImageUrl" class="img-fluid rounded shadow" alt="Post Image" style="width: 100%;">
-            </div>
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <div class="text-center mb-5">
+                    <img src="@Model.ImageUrl" class="img-fluid rounded shadow-sm" alt="Post Image" style="max-height: 500px; object-fit: cover;">
+                </div>
+            }
 
-            <div class="post-content fs-5 leading-lg">
+            <div class="post-content fs-5" style="line-height: 1.8;">
                 @Model.Content
             </div>
-
-            <div class="mt-5 border-top pt-3">
-                <a href="/Post" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Quay lại danh sách
-                </a>
-            </div>
+        </div>
+        <div class="card-footer bg-white py-3">
+            <a href="/Post" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Quay lại danh sách
+            </a>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning float-end">
+                <i class="bi bi-pencil-square"></i> Sửa bài viết này
+            </a>
         </div>
     </div>
 </div>

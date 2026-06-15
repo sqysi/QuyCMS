@@ -2,37 +2,56 @@
 @{
     Layout = "_LayoutAdmin";
 }
-<div class="container mt-4">
-    <h2 class="text-warning">CHỈNH SỬA THÀNH VIÊN</h2>
-    <hr />
-
-    <form asp-action="Edit" method="post">
-        <input type="hidden" asp-for="Id" />
-
-        <div class="mb-3">
-            <label class="form-label fw-bold">Tên đăng nhập:</label>
-            <input asp-for="Username" class="form-control" required />
+<div class="container-fluid mt-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-warning text-dark py-3">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-person-gear"></i> CHỈNH SỬA THÀNH VIÊN</h5>
         </div>
+        <div class="card-body p-4">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
 
-        <div class="mb-3">
-            <label class="form-label fw-bold">Mật khẩu mới (Để trống nếu không đổi):</label>
-            <input asp-for="PasswordHash" type="password" class="form-control" placeholder="Nhập mật khẩu mới nếu muốn đổi..." />
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Tên đăng nhập:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                            <input asp-for="Username" class="form-control" required readonly title="Không thể đổi tên đăng nhập" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Họ và tên:</label>
+                        <input asp-for="FullName" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-bold text-danger">Mật khẩu mới (Tùy chọn):</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                            <input asp-for="PasswordHash" type="password" class="form-control" placeholder="Để trống nếu không đổi mật khẩu..." />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-bold">Quyền hạn:</label>
+                        <select asp-for="Role" class="form-select">
+                            <option value="Editor">Editor (Biên tập viên)</option>
+                            <option value="Administrator">Administrator (Quản trị viên)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr class="text-muted" />
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn btn-warning fw-bold">
+                        <i class="bi bi-save"></i> Cập nhật thay đổi
+                    </button>
+                </div>
+            </form>
         </div>
-
-        <div class="mb-3">
-            <label class="form-label fw-bold">Họ và tên:</label>
-            <input asp-for="FullName" class="form-control" required />
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label fw-bold">Quyền hạn:</label>
-            <select asp-for="Role" class="form-select">
-                <option value="Editor">Editor (Biên tập viên)</option>
-                <option value="Administrator">Administrator (Quản trị viên)</option>
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-warning">Cập nhật thay đổi</button>
-        <a asp-action="Index" class="btn btn-secondary">Hủy bỏ</a>
-    </form>
+    </div>
 </div>

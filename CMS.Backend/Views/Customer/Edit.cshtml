@@ -1,0 +1,31 @@
+﻿@model CMS.Data.Entities.Customer
+@{
+    Layout = "_LayoutAdmin";
+}
+<div class="container mt-4">
+    <h2 class="text-primary">THÊM DANH MỤC MỚI</h2>
+    <hr />
+
+    <form asp-action="Create" method="post">
+        <div class="mb-3">
+            <label class="form-label">Họ tên khách hàng:</label>
+            <input asp-for="FullName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email:</label>
+            <textarea asp-for="Email" class="form-control"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Số điện thoại:</label>
+            <textarea asp-for="Phone" class="form-control"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Địa chỉ:</label>
+            <textarea asp-for="Address" class="form-control"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">Lưu vào hệ thống</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy bỏ</a>
+    </form>
+</div>
