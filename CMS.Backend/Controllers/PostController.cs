@@ -13,14 +13,15 @@ namespace CMS.Backend.Controllers
     public class PostController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        // "Tiêm" kết nối vào Controller
-        public PostController(ApplicationDbContext context)
+        public PostController(
+            ApplicationDbContext context,
+            IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
-        }
-
-        // Đường dẫn: /Post hoặc /Post/Index
+            _webHostEnvironment = webHostEnvironment;
+        }        // Đường dẫn: /Post hoặc /Post/Index
         // Tham số 'id' được truyền vào từ URL (ví dụ: /Post/Index/5)
         public IActionResult Index()
         {
@@ -78,50 +79,52 @@ namespace CMS.Backend.Controllers
 
 
         [HttpPost]
-        public IActionResult Create(Post model, IFormFile uploadImage)
+        public IActionResult Create(
+            Post model,
+            IFormFile? uploadImage)
         {
-            if (uploadImage != null && uploadImage.Length > 0)
+            if (uploadImage != null &&
+                uploadImage.Length > 0)
             {
-                // 1. Định nghĩa đường dẫn lưu file: wwwroot/uploads
-                string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-
-                // Tạo thư mục nếu chưa tồn tại
-                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
-
-                // 2. Tạo tên file duy nhất để không bị đè dữ liệu
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(uploadImage.FileName);
-                string filePath = Path.Combine(folder, fileName);
-
-                // 3. Chép file vào thư mục
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    uploadImage.CopyTo(stream);
-                }
-
-                // 4. Lưu đường dẫn vào CSDL để sau này hiển thị
-                model.ImageUrl = "/uploads/" + fileName;
+                model.ImageUrl =
+                    UploadFile(uploadImage);
             }
 
+            model.CreatedDate = DateTime.Now;
+
             _context.Posts.Add(model);
+
             _context.SaveChanges();
+
             return RedirectToAction("Index");
         }
         public IActionResult Delete(int id)
         {
-            // 1. Tìm bài viết theo Id
             var post = _context.Posts.Find(id);
 
             if (post != null)
             {
-                // 2. Xóa khỏi bộ nhớ tạm
+                if (!string.IsNullOrEmpty(post.ImageUrl))
+                {
+                    string path =
+                        Path.Combine(
+                            _webHostEnvironment.WebRootPath,
+                            post.ImageUrl.TrimStart('/')
+                        );
+
+                    if (System.IO.File.Exists(path))
+                    {
+                        System.IO.File.Delete(path);
+                    }
+                }
+
                 _context.Posts.Remove(post);
 
-                // 3. Cập nhật xuống SQL Server
                 _context.SaveChanges();
             }
+
             return RedirectToAction("Index");
-        }
-        // GET: Hiển thị form kèm dữ liệu cũ
+        }        // GET: Hiển thị form kèm dữ liệu cũ
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -135,39 +138,77 @@ namespace CMS.Backend.Controllers
 
         // POST: Thực hiện cập nhật
         [HttpPost]
-        public IActionResult Edit(Post model, IFormFile uploadImage)
+        public IActionResult Edit(
+            Post model,
+            IFormFile? uploadImage)
         {
-            // Bước 1: Kiểm tra xem người dùng có chọn file ảnh mới không
-            if (uploadImage != null && uploadImage.Length > 0)
+            var post =
+                _context.Posts.Find(model.Id);
+
+            if (post == null)
             {
-                // Thực hiện quy trình upload giống như trang Create
-                string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+                return NotFound();
+            }
 
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(uploadImage.FileName);
-                string filePath = Path.Combine(folder, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
+            if (uploadImage != null &&
+                uploadImage.Length > 0)
+            {
+                if (!string.IsNullOrEmpty(post.ImageUrl))
                 {
-                    uploadImage.CopyTo(stream);
+                    string oldPath =
+                        Path.Combine(
+                            _webHostEnvironment.WebRootPath,
+                            post.ImageUrl.TrimStart('/')
+                        );
+
+                    if (System.IO.File.Exists(oldPath))
+                    {
+                        System.IO.File.Delete(oldPath);
+                    }
                 }
 
-                // Cập nhật đường dẫn ảnh mới vào model
-                model.ImageUrl = "/uploads/" + fileName;
+                post.ImageUrl =
+                    UploadFile(uploadImage);
             }
-            else
-            {
-                // Bước quan trọng: Nếu không upload ảnh mới, chúng ta phải giữ lại ảnh cũ
-                // Chúng ta cần lấy lại giá trị ImageUrl từ Database để tránh bị ghi đè thành rỗng
-                var oldPost = _context.Posts.AsNoTracking().FirstOrDefault(p => p.Id == model.Id);
-                if (oldPost != null && string.IsNullOrEmpty(model.ImageUrl))
-                {
-                    model.ImageUrl = oldPost.ImageUrl;
-                }
-            }
-            _context.Posts.Update(model);
+
+            post.Title = model.Title;
+            post.Content = model.Content;
+            post.CategoryId = model.CategoryId;
+
             _context.SaveChanges();
+
             return RedirectToAction("Index");
+        }
+        private string UploadFile(IFormFile file)
+        {
+            string uploadsFolder =
+                Path.Combine(
+                    _webHostEnvironment.WebRootPath,
+                    "images"
+                );
+
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            string fileName =
+                Guid.NewGuid().ToString()
+                + Path.GetExtension(file.FileName);
+
+            string uploadPath =
+                Path.Combine(
+                    uploadsFolder,
+                    fileName
+                );
+
+            using (var stream =
+                   new FileStream(uploadPath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            return "/images/" + fileName;
         }
     }
 }

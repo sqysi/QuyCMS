@@ -11,4 +11,16 @@ export const getProductById = async (id) => {
     await axios.get(`${API_URL}/products/${id}`);
 
   return response.data;
+<<<<<<< HEAD
+=======
+};
+export const getProductsByCategory = async (
+  categoryId
+) => {
+  const response = await axios.get(
+    `${API_URL}/products/category/${categoryId}`
+  );
+
+  return response.data;
+>>>>>>> 6deb3d7 (cap nhat them frontend)
 };

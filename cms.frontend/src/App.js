@@ -4,6 +4,10 @@ import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Posts from "./pages/Posts";
 import ProductDetail from "./pages/ProductDetail";
+<<<<<<< HEAD
+=======
+import PostDetail from "./pages/PostDetail";
+>>>>>>> 6deb3d7 (cap nhat them frontend)
 function App() {
     return (
         <BrowserRouter>
@@ -27,8 +31,17 @@ function App() {
                     path="/products/:id"
                     element={<ProductDetail />}
                 />
+<<<<<<< HEAD
 
             </Routes>
+=======
+                <Route
+                    path="/posts/:id"
+                    element={<PostDetail />}
+                />
+            </Routes>
+
+>>>>>>> 6deb3d7 (cap nhat them frontend)
         </BrowserRouter>
     );
 }

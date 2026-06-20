@@ -1,12 +1,21 @@
-﻿@model IEnumerable<CMS.Data.Entities.Category>
+﻿@model IEnumerable<CMS.Data.Entities.Product>
 
-<h2 class="text-primary">DANH SÁCH DANH MỤC (DỮ LIỆU MẪU)</h2>
+@{
+    Layout = "_LayoutAdmin";
+}
+
+<h2 class="text-primary">DANH SÁCH SẢN PHẨM</h2>
+<a asp-action="Create" class="btn btn-success mb-3">Thêm sản phẩm mới</a>
+
 <table class="table table-bordered">
     <thead>
         <tr>
             <th>ID</th>
-            <th>Tên danh mục</th>
-            <th>Mô tả</th>
+            <th>Hình ảnh</th>
+            <th>Tên sản phẩm</th>
+            <th>Giá bán</th>
+            <th>Tồn kho</th>
+            <th style="width: 150px;">Thao tác</th>
         </tr>
     </thead>
     <tbody>
@@ -14,8 +23,24 @@
         {
             <tr>
                 <td>@item.Id</td>
-                <td>@item.Name</td>
-                <td>@item.Description</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" alt="@item.Name" style="width: 50px; height: 50px; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <span class="text-muted">Không có ảnh</span>
+                    }
+                </td>
+                <td><strong>@item.Name</strong></td>
+                <td class="text-danger fw-bold">@item.Price.ToString("N0") đ</td>
+                <td>@item.StockQuantity</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
+                </td>
             </tr>
         }
     </tbody>

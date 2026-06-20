@@ -23,7 +23,11 @@ function Header() {
                     font-bold
                     text-emerald-500
                 ">
+<<<<<<< HEAD
                     CMS SHOP
+=======
+                    QUY CMS SHOP
+>>>>>>> 6deb3d7 (cap nhat them frontend)
                 </h1>
 
                 <div className="flex gap-8">
@@ -39,11 +43,14 @@ function Header() {
                     <Link to="/posts">
                         Bài viết
                     </Link>
+<<<<<<< HEAD
 
                     <Link to="/contact">
                         Liên hệ
                     </Link>
 
+=======
+>>>>>>> 6deb3d7 (cap nhat them frontend)
                 </div>
 
                 <button className="

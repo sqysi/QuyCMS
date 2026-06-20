@@ -21,60 +21,71 @@ namespace CMS.Backend.Controllers
         public IActionResult GetAll()
         {
             var products = _context.Products
+                .Include(p => p.CategoryProduct)
                 .OrderByDescending(p => p.Id)
-                .Select(p => new {
+                .Select(p => new
+                {
                     p.Id,
                     p.Name,
                     p.Price,
                     p.ImageUrl,
                     p.StockQuantity,
+                    p.CategoryProductId,
 
-                    // Giả sử Product có liên kết khóa ngoại tới Category
+                    CategoryName = p.CategoryProduct.Name
                 })
                 .ToList();
 
             return Ok(products);
         }
-
         // 2. Lấy chi tiết 1 sản phẩm theo ID
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var product = _context.Products
+                .Include(p => p.CategoryProduct)
                 .Where(p => p.Id == id)
-                .Select(p => new {
+                .Select(p => new
+                {
                     p.Id,
                     p.Name,
                     p.Price,
-                    p.Description, // Chi tiết sản phẩm thường có mô tả
+                    p.Description,
                     p.ImageUrl,
                     p.StockQuantity,
+                    p.CategoryProductId,
+
+                    CategoryName = p.CategoryProduct.Name
                 })
                 .FirstOrDefault();
 
             if (product == null)
             {
-                return NotFound(new { message = "Không tìm thấy sản phẩm này trong hệ thống" });
+                return NotFound(new
+                {
+                    message = "Không tìm thấy sản phẩm"
+                });
             }
 
             return Ok(product);
         }
+        [HttpGet("category/{categoryId}")]
+        public IActionResult GetByCategory(int categoryId)
+        {
+            var products = _context.Products
+                .Where(p => p.CategoryProductId == categoryId)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    p.Price,
+                    p.ImageUrl,
+                    p.StockQuantity,
+                    p.CategoryProductId
+                })
+                .ToList();
 
-        // 3. Lấy danh sách sản phẩm theo Category (Danh mục)
-        //[HttpGet("category/{categoryId}")]
-        //public IActionResult GetByCategory(int categoryId)
-        //{
-        //    var products = _context.Products
-        //        .Where(p => p.CategoryId == categoryId)
-        //        .Select(p => new {
-        //            p.Id,
-        //            p.Name,
-        //            p.Price,
-        //            p.ImageUrl
-        //        })
-        //        .ToList();
-
-        //    return Ok(products);
-        //}
+            return Ok(products);
+        }
     }
 }
